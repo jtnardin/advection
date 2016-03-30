@@ -8,6 +8,8 @@
 % terms as forcing terms... can include in sparse matrix -- may need flux limiters for these terms, not sure
 % - Better incorporate BC in matrix formulation.
 
+%GOING CRAZY!
+
 n = 50;
 dt = 1e-4;
 
