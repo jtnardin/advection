@@ -1,7 +1,9 @@
 %test_problem_1.m written 3-22-16 by JTN to run test problem 1 of Thackham
-%2009 work.
+%2009 work. This code is harder to understand than test_problem_1_simpler.m
+%, but it's actually a but more accurate. Though this code would be hard to
+%extend to 2D / 3D.
 
-n = 150;
+n = 200;
 dt = 1e-3;
 
 x = linspace(0,1,n);
@@ -15,9 +17,9 @@ x_int = 2:xn-1;
 
 
 D = 6e-3;
-V = -2;
-x0 = 0.8;
-theta = 1;
+V = 2;
+x0 = 0.2;
+theta = 0.5;
 
 Dc = D*dt/dx^2;
 Vc = V*dt/dx;
@@ -58,7 +60,9 @@ A_nm1n = @(se,sw) sparse([x_int x_int x_int 1 xn],[x_int-1 x_int x_int+1  1 xn],
 u = zeros(xn,tn);
 u(:,1) = IC(x);
 
-for i = 2
+tic
+
+for i = 2:tn
     
     if V>=0
     
@@ -78,6 +82,9 @@ for i = 2
         %compute interior points
         u(:,i) = A_nn(sigma(r_e),sigma(r_w))\A_nm1n(sigma(r_e),sigma(r_w))*u(:,i-1);
         
+        %attempt gmres -- only faster for larger systems! (xn = 300, dt = 1e-4)
+%         [u(:,i) flag] = gmres(A_nn(sigma(r_e),sigma(r_w)),A_nm1n(sigma(r_e),sigma(r_w))*u(:,i-1));
+
         
     end
     
@@ -85,6 +92,8 @@ for i = 2
     u(1,i) = LB(t(i));
     u(end,i) = RB(t(i));
 end
+
+toc
 
 for i = 1:10:tn
     plot(x,u(:,i))
